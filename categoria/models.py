@@ -3,8 +3,9 @@ from django.db import models
 # Create your models here.
 class Categoria(models.Model):
     # no agregamos id porque django lo crea automaticamente
-    nombre = models.CharField(max_length=50)
+    categoria = models.CharField(max_length=50)
     estado = models.BooleanField('Estado', default=True)
+    # OK
 
 # Si quisieramos crear un nueva tabla en la base de datos que tenga algo que ver con categoria como subcategoria por ejemplo simplemente creamos el modelo dentro de esta misma aplicacion y no en su propia aplicacion
 # class SubCategoria(models.Model):

@@ -17,3 +17,4 @@ class Usuario(models.Model):
     foto = models.CharField(max_length=250)
     carrera = models.CharField(max_length=250)
     perfil = models.TextField()
+    # OK

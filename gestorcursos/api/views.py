@@ -1,84 +1,57 @@
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAdminUser
 
-from gestorcursos.models import Curso, CalificacionCurso, CursoUsuario, Seccion, Curso_Temas, Requisitos, Clase, Recurso, clases_vistas, Examen, Pregunta, Alternativa, ResolverExamen, DetalleResolverExamen, Respuesta
-from gestorcursos.api.serializers import CursoSerializer, CalificacionCursoSerializer, CursoUsuarioSerializer, SeccionSerializer, Curso_TemasSerializer, RequisitosSerializer, ClaseSerializer, RecursoSerializer, clases_vistasSerializer, ExamenSerializer, PreguntaSerializer, AlternativaSerializer, ResolverExamenSerializer, DetalleResolverExamenSerializer, RespuestaSerializer
+from gestorcursos.models import Curso, CursoUsuario, Sesion, Curso_Temas, Requisitos, Contenido, Recurso, contenido_vistas
+from gestorcursos.api.serializers import CursoSerializer, CursoUsuarioSerializer, SesionSerializer, Curso_TemasSerializer, RequisitosSerializer, ContenidoSerializer, RecursoSerializer, contenido_vistasSerializer
 
 
 class CursoApiViewSet(ModelViewSet):
     permission_classes = [IsAdminUser]
     serializer_class = CursoSerializer
     queryset = Curso.objects.all()
-
-class CalificacionCursoApiViewSet(ModelViewSet):
-    permission_classes = [IsAdminUser]
-    serializer_class = CalificacionCursoSerializer
-    queryset = CalificacionCurso.objects.all()
+    # OK
 
 class CursoUsuarioApiViewSet(ModelViewSet):
     permission_classes = [IsAdminUser]
     serializer_class = CursoUsuarioSerializer
     queryset = CursoUsuario.objects.all()
+    # OK
 
-class SeccionApiViewSet(ModelViewSet):
+class SesionApiViewSet(ModelViewSet):
     permission_classes = [IsAdminUser]
-    serializer_class = SeccionSerializer
-    queryset = Seccion.objects.all()
+    serializer_class = SesionSerializer
+    queryset = Sesion.objects.all()
+    # OK
 
 class Curso_TemasApiViewSet(ModelViewSet):
     permission_classes = [IsAdminUser]
     serializer_class = Curso_TemasSerializer
     queryset = Curso_Temas.objects.all()
+    # OK
 
 class RequisitosApiViewSet(ModelViewSet):
     permission_classes = [IsAdminUser]
     serializer_class = RequisitosSerializer
     queryset = Requisitos.objects.all()
+    # OK
 
-class ClaseApiViewSet(ModelViewSet):
+class ContenidoApiViewSet(ModelViewSet):
     permission_classes = [IsAdminUser]
-    serializer_class = ClaseSerializer
-    queryset = Clase.objects.all()
+    serializer_class = ContenidoSerializer
+    queryset = Contenido.objects.all()
+    # OK
 
 class RecursoApiViewSet(ModelViewSet):
     permission_classes = [IsAdminUser]
     serializer_class = RecursoSerializer
     queryset = Recurso.objects.all()
+    # OK
 
-class clases_vistasApiViewSet(ModelViewSet):
+class contenido_vistasApiViewSet(ModelViewSet):
     permission_classes = [IsAdminUser]
-    serializer_class = clases_vistasSerializer
-    queryset = clases_vistas.objects.all()
-
-class ExamenApiViewSet(ModelViewSet):
-    permission_classes = [IsAdminUser]
-    serializer_class = ExamenSerializer
-    queryset = Examen.objects.all()
-
-class PreguntaApiViewSet(ModelViewSet):
-    permission_classes = [IsAdminUser]
-    serializer_class = PreguntaSerializer
-    queryset = Pregunta.objects.all()
-
-class AlternativaApiViewSet(ModelViewSet):
-    permission_classes = [IsAdminUser]
-    serializer_class = AlternativaSerializer
-    queryset = Alternativa.objects.all()
-
-class ResolverExamenApiViewSet(ModelViewSet):
-    permission_classes = [IsAdminUser]
-    serializer_class = ResolverExamenSerializer
-    queryset = ResolverExamen.objects.all()
-
-class DetalleResolverExamenApiViewSet(ModelViewSet):
-    permission_classes = [IsAdminUser]
-    serializer_class = DetalleResolverExamenSerializer
-    queryset = DetalleResolverExamen.objects.all()
-
-class RespuestaApiViewSet(ModelViewSet):
-    permission_classes = [IsAdminUser]
-    serializer_class = RespuestaSerializer
-    queryset = Respuesta.objects.all()
+    serializer_class = contenido_vistasSerializer
+    queryset = contenido_vistas.objects.all()
+    # OK
 
 
 

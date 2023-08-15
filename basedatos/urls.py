@@ -23,7 +23,7 @@ from drf_yasg import openapi
 
 from categoria.api.router import router_categoria
 from usuario.api.router import router_usuario
-from gestorcursos.api.router import router_curso, router_calificacioncurso, router_cursousuario, router_seccion, router_curso_temas, router_requisitos, router_clase, router_recurso, router_clases_vistas, router_examen, router_pregunta, router_alternativa, router_resolverexamen, router_detalleresolverexamen, router_respuesta
+from gestorcursos.api.router import router_curso, router_cursousuario, router_sesion, router_curso_temas, router_requisitos, router_contenido_vistas, router_recurso, router_contenido
 
 
 schema_view = get_schema_view(
@@ -43,20 +43,13 @@ api_urls = [
     path('categoria/', include(router_categoria.urls)),
     path('usuario/', include(router_usuario.urls)),
     path('curso/', include(router_curso.urls)),
-    path('calificacioncurso/', include(router_calificacioncurso.urls)),
     path('cursousuario/', include(router_cursousuario.urls)),
-    path('seccion/', include(router_seccion.urls)),
+    path('sesion/', include(router_sesion.urls)),
     path('curso_temas/', include(router_curso_temas.urls)),
     path('requisitos/', include(router_requisitos.urls)),
-    path('clase/', include(router_clase.urls)),
+    path('contenido/', include(router_contenido.urls)),
     path('recurso/', include(router_recurso.urls)),
-    path('clases_vistas/', include(router_clases_vistas.urls)),
-    path('examen/', include(router_examen.urls)),
-    path('pregunta/', include(router_pregunta.urls)),
-    path('alternativa/', include(router_alternativa.urls)),
-    path('resolverexamen/', include(router_resolverexamen.urls)),
-    path('detalleresolverexamen/', include(router_detalleresolverexamen.urls)),
-    path('respuesta/', include(router_respuesta.urls))
+    path('contenido_vistas/', include(router_contenido_vistas.urls))
 ]
 
 urlpatterns = [
