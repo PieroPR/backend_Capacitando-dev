@@ -6,7 +6,7 @@ class Usuario(models.Model):
     # no agregamos id porque django lo crea automaticamente
     usuario = models.CharField(max_length=80)
     password = models.CharField(max_length=300)
-    estado = models.BooleanField('Estado', default=True)
+    estado = models.IntegerField('Estado', default=1)
     rol = models.IntegerField()
     nombre = models.CharField(max_length=45)
     apellido = models.CharField(max_length=45)

@@ -18,7 +18,7 @@ class Curso(models.Model):
     descripcion = models.TextField()
     fecha_inicio = models.DateField()
     fecha_final = models.DateField()
-    estado = models.BooleanField('Estado', default=True) # recomendaria cambiar el nombre de estado a activo acá y en los demas modelos porque es mas entendible (si está activo es True y si está inactivo es False)
+    estado = models.IntegerField('Estado', default=1) # recomendaria cambiar el nombre de estado a activo acá y en los demas modelos porque es mas entendible (si está activo es True y si está inactivo es False)
     created_at = models.DateTimeField(auto_now_add=True) # se agrega la fecha automaticamente cuando se crea el registro
     updated_at = models.DateTimeField(auto_now=True) # se agrega la fecha automaticamente cuando se actualiza el registro
     # OK
@@ -37,14 +37,14 @@ class Sesion(models.Model):
     nombre_sesion = models.CharField(max_length=90)
     descripcion = models.TextField()
     id_curso = models.ForeignKey(Curso, on_delete=models.SET_NULL, null=True)
-    estado = models.BooleanField('Estado', default=True)
+    estado = models.IntegerField('Estado', default=1)
     # OK
 
 class Curso_Temas(models.Model):
     # no agregamos id porque django lo crea automaticamente
     id_curso = models.ForeignKey(Curso, on_delete=models.SET_NULL, null=True)
     temas = models.TextField()
-    estado = models.BooleanField('Estado', default=True)
+    estado = models.IntegerField('Estado', default=1)
     # OK
 
 
@@ -55,7 +55,7 @@ class Contenido(models.Model):
     descripcion = models.TextField()
     url_video = models.CharField(max_length=300)
     minutos_video = models.CharField(max_length=20)
-    estado = models.BooleanField('Estado', default=True)
+    estado = models.IntegerField('Estado', default=1)
     # OK
 
 class Recurso(models.Model):
@@ -65,7 +65,7 @@ class Recurso(models.Model):
     tipo_recurso = models.CharField(max_length=45)
     url = models.CharField(max_length=45)
     archivo = models.CharField(max_length=80)
-    estado = models.BooleanField('Estado', default=True)
+    estado = models.IntegerField('Estado', default=1)
     # OK
 
 class contenido_vistas(models.Model):
@@ -79,6 +79,6 @@ class Requisitos(models.Model):
     # no agregamos id porque django lo crea automaticamente
     id_curso = models.ForeignKey(Curso, on_delete=models.SET_NULL, null=True)
     requisitos = models.TextField()
-    estado = models.BooleanField('Estado', default=True)
+    estado = models.IntegerField('Estado', default=1)
     # models.IntegerField
     # OK

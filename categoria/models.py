@@ -4,7 +4,7 @@ from django.db import models
 class Categoria(models.Model):
     # no agregamos id porque django lo crea automaticamente
     categoria = models.CharField(max_length=50)
-    estado = models.BooleanField('Estado', default=True)
+    estado = models.IntegerField('Estado', default=1)
     # OK
 
 # Si quisieramos crear un nueva tabla en la base de datos que tenga algo que ver con categoria como subcategoria por ejemplo simplemente creamos el modelo dentro de esta misma aplicacion y no en su propia aplicacion
