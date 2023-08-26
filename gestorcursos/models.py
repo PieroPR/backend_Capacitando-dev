@@ -23,7 +23,6 @@ class Curso(models.Model):
     updated_at = models.DateTimeField(auto_now=True) # se agrega la fecha automaticamente cuando se actualiza el registro
     # OK
 
-
 # Creo esta clase dentro de la aplicacion curso y no en su propia aplicacion porque al ser una tabla relacional no tiene sentido crearle una aplicacion propia
 class CursoUsuario(models.Model):
     # No agregamos id porque django lo crea automaticamente
@@ -40,17 +39,10 @@ class Sesion(models.Model):
     estado = models.IntegerField('Estado', default=1)
     # OK
 
-class Curso_Temas(models.Model):
-    # no agregamos id porque django lo crea automaticamente
-    id_curso = models.ForeignKey(Curso, on_delete=models.SET_NULL, null=True)
-    temas = models.TextField()
-    estado = models.IntegerField('Estado', default=1)
-    # OK
-
-
 class Contenido(models.Model):
     # no agregamos id porque django lo crea automaticamente
-    id_seccion = models.ForeignKey(Sesion, on_delete=models.SET_NULL, null=True)
+    # id_seccion = models.ForeignKey(Sesion, on_delete=models.SET_NULL, null=True)
+    id_sesion = models.ForeignKey(Sesion, on_delete=models.SET_NULL, null=True)
     titulo = models.TextField()
     descripcion = models.TextField()
     url_video = models.CharField(max_length=300)
@@ -73,12 +65,4 @@ class contenido_vistas(models.Model):
     id_usuario = models.ForeignKey(Usuario, on_delete=models.SET_NULL, null=True)
     id_contenido = models.ForeignKey(Contenido, on_delete=models.SET_NULL, null=True)
     min_video = models.CharField(max_length=5)
-    # OK
-
-class Requisitos(models.Model):
-    # no agregamos id porque django lo crea automaticamente
-    id_curso = models.ForeignKey(Curso, on_delete=models.SET_NULL, null=True)
-    requisitos = models.TextField()
-    estado = models.IntegerField('Estado', default=1)
-    # models.IntegerField
     # OK

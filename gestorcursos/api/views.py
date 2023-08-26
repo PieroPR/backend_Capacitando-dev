@@ -1,8 +1,8 @@
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAdminUser
 
-from gestorcursos.models import Curso, CursoUsuario, Sesion, Curso_Temas, Requisitos, Contenido, Recurso, contenido_vistas
-from gestorcursos.api.serializers import CursoSerializer, CursoUsuarioSerializer, SesionSerializer, Curso_TemasSerializer, RequisitosSerializer, ContenidoSerializer, RecursoSerializer, contenido_vistasSerializer
+from gestorcursos.models import Curso, CursoUsuario, Sesion, Contenido, Recurso, contenido_vistas
+from gestorcursos.api.serializers import CursoSerializer, CursoUsuarioSerializer, SesionSerializer, ContenidoSerializer, RecursoSerializer, contenido_vistasSerializer
 
 
 class CursoApiViewSet(ModelViewSet):
@@ -21,18 +21,6 @@ class SesionApiViewSet(ModelViewSet):
     permission_classes = [IsAdminUser]
     serializer_class = SesionSerializer
     queryset = Sesion.objects.all()
-    # OK
-
-class Curso_TemasApiViewSet(ModelViewSet):
-    permission_classes = [IsAdminUser]
-    serializer_class = Curso_TemasSerializer
-    queryset = Curso_Temas.objects.all()
-    # OK
-
-class RequisitosApiViewSet(ModelViewSet):
-    permission_classes = [IsAdminUser]
-    serializer_class = RequisitosSerializer
-    queryset = Requisitos.objects.all()
     # OK
 
 class ContenidoApiViewSet(ModelViewSet):
