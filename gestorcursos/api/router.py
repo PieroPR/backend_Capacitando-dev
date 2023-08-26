@@ -1,6 +1,6 @@
 from rest_framework.routers import DefaultRouter
 
-from gestorcursos.api.views import CursoApiViewSet, CursoUsuarioApiViewSet, SesionApiViewSet, Curso_TemasApiViewSet, ContenidoApiViewSet, RecursoApiViewSet, contenido_vistasApiViewSet, RequisitosApiViewSet
+from gestorcursos.api.views import CursoApiViewSet, CursoUsuarioApiViewSet, SesionApiViewSet, ContenidoApiViewSet, RecursoApiViewSet, contenido_vistasApiViewSet
 
 router_curso = DefaultRouter()
 router_curso.register(prefix='', basename='curso', viewset=CursoApiViewSet)  # OK
@@ -10,12 +10,6 @@ router_cursousuario.register(prefix='', basename='cursousuario', viewset=CursoUs
 
 router_sesion = DefaultRouter()
 router_sesion.register(prefix='', basename='sesion', viewset=SesionApiViewSet) # OK
-
-router_curso_temas = DefaultRouter()
-router_curso_temas.register(prefix='', basename='curso_temas', viewset=Curso_TemasApiViewSet)
-
-router_requisitos = DefaultRouter()
-router_requisitos.register(prefix='', basename='requisitos', viewset=RequisitosApiViewSet) # OK
 
 router_contenido = DefaultRouter()
 router_contenido.register(prefix='', basename='contenido', viewset=ContenidoApiViewSet) # OK

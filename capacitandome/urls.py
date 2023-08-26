@@ -23,7 +23,7 @@ from drf_yasg import openapi
 
 from categoria.api.router import router_categoria
 from usuario.api.router import router_usuario
-from gestorcursos.api.router import router_curso, router_cursousuario, router_sesion, router_curso_temas, router_requisitos, router_contenido_vistas, router_recurso, router_contenido
+from gestorcursos.api.router import router_curso, router_cursousuario, router_sesion, router_contenido_vistas, router_recurso, router_contenido
 
 
 schema_view = get_schema_view(
@@ -45,8 +45,6 @@ api_urls = [
     path('curso/', include(router_curso.urls)),
     path('cursousuario/', include(router_cursousuario.urls)),
     path('sesion/', include(router_sesion.urls)),
-    path('curso_temas/', include(router_curso_temas.urls)),
-    path('requisitos/', include(router_requisitos.urls)),
     path('contenido/', include(router_contenido.urls)),
     path('recurso/', include(router_recurso.urls)),
     path('contenido_vistas/', include(router_contenido_vistas.urls))
