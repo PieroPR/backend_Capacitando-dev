@@ -1,0 +1,232 @@
+
+
+py -m venv env_backend_bd_capacitandome
+
+
+.\env_backend_bd_capacitandome\Scripts\activate
+.\.venv\bin\activate
+
+python -m pip install --upgrade pip
+
+pip install django
+
+
+python manage.py migrate
+python manage.py migrate --run-syncdb
+python manage.py makemigrations
+python manage.py migrate
+python manage.py runserver
+
+http://127.0.0.1:8000/
+http://127.0.0.1:8000/admin
+
+
+### for models graph (Generate database diagram(ERD) with Django) ###
+links: 
+- https://django-extensions.readthedocs.io/en/latest/graph_models.html
+- https://www.youtube.com/watch?v=yvf_J225iM8
+- https://pygraphviz.github.io/documentation/stable/install.html
+- http://www.graphviz.org/docs/graph/
+- https://www.linkedin.com/pulse/generate-database-diagramerd-django-extensions-automatically-srujan-s/
+
+
+
+
+Manual download of "pygraphviz":
+1. to create graph models with "graphviz: 2.46.0" of db django (https://www.youtube.com/watch?v=yvf_J225iM8 or https://pygraphviz.github.io/documentation/stable/install.html):
+wget https://gitlab.com/graphviz/graphviz/-/package_files/6164164/download
+
+
+2. to install PyGraphviz via:
+
+python -m pip install --global-option=build_ext --global-option="-IC:\Program Files\Graphviz\include" --global-option="-LC:\Program Files\Graphviz\lib" pygraphviz
+
+pip install --global-option=build_ext --global-option="-IC:\Program Files\Graphviz\include" --global-option="-LC:\Program Files\Graphviz\lib" pygraphviz
+
+
+pip install pygraphviz
+
+3. to install django-extensions, pyparsing, pydot:
+add 'django-extensions' in "requirements.txt":
+pip install -r requirements.txt
+or
+
+pip install pyparsing pydot django-extensions
+
+
+config settings.py from "piero/basedatos/settings.py" and add the next codes:
+'''
+
+# add django_extensions in INSTALLED_APPS:
+INSTALLED_APPS = [
+    ...,
+    "django_extensions", # para usar GRAPH_MODELS
+    ...,
+]
+
+# after SIMPLE_JWT, add:
+GRAPH_MODELS = {
+  'all_applications': True,
+  'group_models': True,
+}
+'''
+# to show Migrations:
+python manage.py showmigrations
+
+python manage.py shell
+'''
+from django.conf import settings; 'django_extensions' in settings.INSTALLED_APPS
+'''
+
+If it doesn't return True, then it means that you didn't add 'django_extensions' properly in INSTALLED_APPS, 
+and that would be the only reason why Django doesn't find the command.
+
+# Create a graph of all models in one:
+python manage.py graph_models --pydot -a -o my_project_visualized_global.png
+
+# Create a graph for only certain models:
+python manage.py graph_models -e -g -l --dot -o graph_model_users_visualized.png users  # only app users
+
+# Create a dot file for only the 'users' applications of your project
+python manage.py graph_models users > my_project_users.dot
+
+python manage.py graph_models -a > my_project_all.dot
+
+python manage.py graph_models --pydot -a -g -o users.png
+
+
+####################### crea el app y el model "seccion" #######################
+python manage.py startapp seccion
+
+
+from basedatos/settings.py add "seccion" in INSTALLED_APPS:
+
+INSTALLED_APPS = [
+    ...,
+    "seccion",
+    ...,
+]
+
+from seccion/models.py add the next codes:
+
+'''
+from django.db import models
+
+class Seccion(models.Model):
+    number = models.IntegerField(unique=True)
+
+    def __str__(self):
+        return str(self.number)
+'''
+
+from seccion/admin.py add the next codes:
+
+'''
+from django.contrib import admin
+
+from tables.models import Table
+
+@admin.register(Table)
+class TableAdmin(admin.ModelAdmin):
+    pass
+'''
+
+despues de haber las configs sobre el modelo creado, ejecutar lo sgte:
+python manage.py makemigrations
+
+python manage.py migrate
+
+python manage.py runserver
+
+
+para hacer que django funcione con api rest, realiza los siguiente:
+
+
+pip install djangorestframework
+
+luego, 
+
+INSTALLED_APPS = [
+    ...,
+    "django_extensions",
+    ...,
+]
+
+luego, realiza lo siguiente para la documentacion API
+
+pip install drf-yasg
+
+
+from basedatos/settings.py in INSTALLED_APPS:
+
+INSTALLED_APPS = [
+    ...,
+    "drf_yasg",
+    ...,
+]
+
+
+from basedatos/urls.py in INSTALLED_APPS:
+
+'''
+from rest_framework import permissions
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
+
+
+
+...
+
+schema_view = get_schema_view(
+   openapi.Info(
+      title="Capacitandome - API Doc",
+      default_version='v1',
+      description="Documentacion de la api de Capacitandome",
+      terms_of_service="https://www.tincode.es/",
+      contact=openapi.Contact(email="pieropr17@gmail.com"),
+      license=openapi.License(name="BSD License"),
+   ),
+   public=True,
+)
+
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('docs/', schema_view.with_ui('swagger',cache_timeout=0), name='schema-swagger-ui'),
+    path('redoc/', schema_view.with_ui('redoc',cache_timeout=0), name='schema-redoc'),
+]
+
+'''
+
+
+python manage.py runserver
+
+
+Luego, creamos usuario admin para el backend django
+
+python manage.py makemigrations
+python manage.py migrate
+python manage.py createsuperuser
+python manage.py runserver
+
+
+user: bcknd_bdcptndme
+email: bcknd_bdcptndme@gmail.com
+contra: bck3ndfd_bfdd@saf!0ds
+
+
+
+requisitos
+curso_temas
+
+
+Luego, creamos el CRUD sobre los modelos para el backend django visualizado en swagger
+
+
+git status
+
+git add basedatos/urls.py categoria/api/serializers.py categoria/models.py gestorcursos/api/router.py gestorcursos/api/serializers.py gestorcursos/api/views.py gestorcursos/models.py usuario/models.py
+
+git commit -m "proyecto backend actualizado"
+
+git push -u origin main

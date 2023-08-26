@@ -1,0 +1,502 @@
+
+cd backend-ts1
+git init
+git status
+git add .
+git commit -m "proyecto backend iniciado"
+git branch --delete master
+git checkout -b main
+git checkout main
+git remote add origin https://github.com/PieroPR/backend-ts1.git
+git push -u origin main
+
+git log --oneline --decorate --all --graph
+
+##################################################################################################
+
+cd frontend-ts1
+git init
+git status
+git add README.md public/* src/* .gitignore package.json
+git commit -m "proyecto frontend iniciado"
+git branch --delete master
+git checkout -b main
+git checkout main
+git remote add origin https://github.com/PieroPR/frontend-ts1.git
+git push -u origin main
+
+git log --oneline --decorate --all --graph
+
+##################################################################################################
+
+
+########################################### In Frontend #######################################################
+
+git branch
+git checkout -b categories-admin
+git pull main categories-admin
+
+
+# to list the fetched remote branches:
+git branch -r
+
+# To fetch all remote server branches:
+git fetch origin
+
+########################################### In Backend #######################################################
+
+git branch
+git checkout -b api
+
+git branch
+git checkout -b users
+git checkout api
+
+git branch
+git checkout -b categories
+git checkout api
+
+git branch
+git checkout -b products
+git checkout api
+
+git branch
+git checkout -b tables
+git checkout api
+
+git branch
+git checkout -b orders
+git checkout api
+
+git branch
+git checkout -b payments
+git checkout api
+
+git branch
+git checkout -b login
+git checkout api
+
+
+git branch
+git checkout api
+git status
+git add .
+git remote add origin https://github.com/PieroPR/backend-ts1.git
+git push -u origin api
+
+git log --oneline --decorate --all --graph
+to open "Show Commit Graph":ctrl+shit+P | show commit graph
+
+
+########################################### Working In Backend #######################################################
+
+git checkout users
+git branch
+
+conda activate backend_taller_software
+
+python manage.py migrate
+python manage.py migrate --run-syncdb
+python manage.py makemigrations
+python manage.py migrate
+python manage.py createsuperuser
+
+user: DdonLucho
+email: restauranteDdonLucho@gmail.com
+contra: lov3D_DonLucho@#!_3040#
+new_contra: luc2324!
+
+python manage.py changepassword DdonLucho
+
+
+python manage.py shell
+'''
+from django.contrib.auth import get_user_model
+User = get_user_model()
+u = User.objects.get(username='DdonLucho')
+u.set_password('luc2324!')
+u.save()
+'''
+python manage.py runserver
+
+http://127.0.0.1:8000/
+http://127.0.0.1:8000/admin
+
+
+############## 1 (modelo users modificado ) ##############
+
+config models.py from "backend-ts1/users/models.py" and add the next codes:
+
+'''
+from django.db import models
+
+class User(AbstractUser):
+    pass
+
+    # para que el usuario acceda solo con su email
+    email = models.EmailField(unique=True)
+
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = []
+'''
+
+python manage.py makemigrations
+python manage.py migrate
+python manage.py runserver
+
+http://127.0.0.1:8000/admin
+
+git branch
+git checkout users
+git status
+git add users/models.py
+git commit -m "modelo users modificado #1"
+git push -u origin users
+
+pull request (from: users to: api)
+title: modelo users modificado #1
+write: - Se modificó el método de acceso en el inicio de sesión del panel de administración (admin), cambiando de nombre de usuario a correo electrónico.
+
+router.py > views.py > serializers.py > models.py
+
+############## 2 (modelo users modificado ) ##############
+
+add djangorestframework-simplejwt in "requirements.txt":
+pip install -r requirements.txt
+
+config settings.py from "backend-ts1/backend/settings.py" and add the next codes between "AUTH_PASSWORD_VALIDATORS" and "LANGUAGE_CODE":
+
+'''
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+}
+'''
+
+
+config router.py from "backend-ts1/users/api/router.py" and add the next codes:
+
+from rest_framework.routers import DefaultRouter
+...
+from rest_framework_simplejwt.views import TokenObtainPairView # add for JWTAuthentication
+
+#add url for jwt:
+urlpatterns = [
+    path('auth/login/', TokenObtainPairView.as_view(), name='token_obtain_pair'), # add to path for the users jwt
+    path("auth/me/", UserView.as_view())
+]
+...
+
+python manage.py runserver
+
+if you get the next error "Access to fetch at 'http://127.0.0.1:8000/api/auth/login/' from origin 'http://localhost:3000' has been blocked by CORS policy",
+make an implementation of "django-cors-headers" en the backend.
+
+add django-cors-headers in "requirements.txt":
+pip install -r requirements.txt
+
+
+config settings.py from "backend-ts1/backend/settings.py" and add the next codes:
+...
+
+# edit ALLOWED_HOSTS, add these:
+ALLOWED_HOSTS = ["*"]  # hosts like: ['127.0.0.1', "localhost"]
+# ALLOWED_HOSTS = []
+
+INSTALLED_APPS = [
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
+    "rest_framework",  # para api
+    "django_filters",
+    "drf_yasg",  # para documentacion de api
+    "corsheaders",  # para cors
+    "users",
+    "categories",
+    "products",
+    "tables",
+    "orders",
+    "payments",
+]
+
+# in MIDDLEWARE add the next codes:
+MIDDLEWARE = [
+    ...,
+    "corsheaders.middleware.CorsMiddleware",  # add for cors
+    "django.middleware.common.CommonMiddleware",
+    ...,
+]
+...
+
+python manage.py runserver
+
+
+If the cors error persists, it is because I am missing one more configuration.
+config settings.py from "backend-ts1/backend/settings.py" and add the next codes:
+
+'''
+import datetime
+
+LANGUAGE_CODE = "es-es"
+
+# add CORS_ORIGIN_ALLOW_ALL and CORS_ALLOW_CREDENTIALS after DEFAULT_AUTO_FIELD:
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
+
+# if you want the token to expire, say one month, two months, add the next codes after CARS_ALLOW_CREDENTIALS:
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': datetime.timedelta(days=120)
+}
+
+'''
+
+add datetime in "requirements.txt":
+pip install -r requirements.txt
+
+python manage.py runserver
+
+git branch
+git checkout users
+git status
+git add users/models.py users/api/router.py backend/settings.py requirements.txt
+git commit -m "backend y modelo users modificados #2"
+git push -u origin users
+
+pull request (from: users to: api)
+title: backend y modelo users modificados #2
+write: - Se creó endpoint de login con JWT, para obtener datos personales del usuario.
+write: - Se implementó y configuró correctamente las politicas de CORS para hacer uso de la API users en la autentificación del usuario.
+
+git status
+git add db.sqlite3
+git commit -m "db.sqlite3 actualizado #3"
+git push -u origin users
+
+
+git restore backend/__pycache__/settings.cpython-310.pyc users/__pycache__/models.cpython-310.pyc users/api/__pycache__/router.cpython-310.pyc users/api/__pycache__/viewsets.cpython-310.pyc
+
+
+
+git branch
+git checkout api
+
+to Merge the "Pull request" from users to api (users merged into api), do this:
+
+First. Update your local repository with the latest changes.
+git pull origin api
+
+Step 2: Switch to the base branch of the pull request.
+git checkout api
+
+Step 3: Merge the head branch into the base branch.
+git merge users
+
+Step 4: Push the changes.
+git push -u origin api
+
+git log --oneline --decorate --all --graph
+to open "Show Commit Graph":ctrl+shit+P | show commit graph
+
+
+to pull (fetch and download) content from a remote repository and immediately update the local repository to match that content:
+git branch
+git checkout main
+git pull origin main
+
+git branch
+git checkout api
+git pull origin api
+
+git branch
+git checkout users
+git pull origin users
+
+
+git fetch --all
+
+
+### for models graph (Generate database diagram(ERD) with Django) ###
+links: 
+- https://django-extensions.readthedocs.io/en/latest/graph_models.html
+- https://www.youtube.com/watch?v=yvf_J225iM8
+- https://pygraphviz.github.io/documentation/stable/install.html
+- http://www.graphviz.org/docs/graph/
+- https://www.linkedin.com/pulse/generate-database-diagramerd-django-extensions-automatically-srujan-s/
+
+
+add and 'pyparsing" and "pydot" in "requirements.txt":
+pip install -r requirements.txt
+
+or pip install pyparsing pydot
+
+Manual download of "pygraphviz":
+1. to create graph models with "graphviz: 2.46.0" of db django (https://www.youtube.com/watch?v=yvf_J225iM8 or https://pygraphviz.github.io/documentation/stable/install.html):
+wget https://gitlab.com/graphviz/graphviz/-/package_files/6164164/download
+
+
+2. to install PyGraphviz via:
+
+python -m pip install --global-option=build_ext --global-option="-IC:\Program Files\Graphviz\include" --global-option="-LC:\Program Files\Graphviz\lib" pygraphviz
+
+3. to install django-extensions:
+add 'django-extensions" in "requirements.txt":
+pip install -r requirements.txt
+or
+pip install django-extensions
+
+
+config settings.py from "backend-ts1/backend/settings.py" and add the next codes:
+'''
+
+# add django_extensions in INSTALLED_APPS:
+INSTALLED_APPS = [
+    ...,
+    "django_extensions", # para usar GRAPH_MODELS
+    ...,
+]
+
+# after SIMPLE_JWT, add:
+GRAPH_MODELS = {
+  'all_applications': True,
+  'group_models': True,
+}
+'''
+# to show Migrations:
+python manage.py showmigrations
+
+python manage.py shell
+'''
+from django.conf import settings; 'django_extensions' in settings.INSTALLED_APPS
+'''
+
+If it doesn't return True, then it means that you didn't add 'django_extensions' properly in INSTALLED_APPS, 
+and that would be the only reason why Django doesn't find the command.
+
+# Create a graph of all models in one:
+python manage.py graph_models --pydot -a -o my_project_visualized_global.png
+
+# Create a graph for only certain models:
+python manage.py graph_models -e -g -l --dot -o graph_model_users_visualized.png users  # only app users
+
+# Create a dot file for only the 'users' applications of your project
+python manage.py graph_models users > my_project_users.dot
+
+python manage.py graph_models -a > my_project_all.dot
+
+python manage.py graph_models --pydot -a -g -o users.png
+
+git branch
+git checkout api
+git pull origin api
+
+python manage.py runserver
+
+
+####################### branch api updated (pulled from local of remote branch) #######################
+
+# to check remote branch:
+git branch -a
+
+# Create Branch Copy
+git switch -c ccasado16-patch-1 origin/ccasado16-patch-1
+
+git branch
+git checkout api
+git pull origin api
+
+git branch
+git checkout -b pieropr-patch-1
+git checkout api
+
+python manage.py migrate --run-syncdb
+python manage.py makemigrations
+python manage.py migrate
+
+
+
+python manage.py createsuperuser
+
+user: DdonLucho
+email: restauranteDdonLucho@gmail.com
+contra: lov3D_DonLucho@#!_3040#
+new_contra: luc2324!
+
+
+python manage.py runserver
+
+python manage.py shell
+'''
+from django.contrib.auth import get_user_model
+User = get_user_model()
+u = User.objects.get(username='DdonLucho')
+u.set_password('luc2324!')
+u.save()
+'''
+python manage.py runserver
+
+http://127.0.0.1:8000/
+http://127.0.0.1:8000/admin
+
+
+# On windows to format json in VSCode, type: Shift + Alt + F
+
+
+# to get meta data from django:
+python manage.py inspectdb
+
+# to export meta data from django db:
+python manage.py dumpdata > db.json
+
+
+#####################################################################
+git clone https://github.com/ccasado16/frontend-ts1.git
+cd frontend-ts1
+
+git branch
+git checkout api
+git pull origin api
+
+
+yarn add postcss-normalize
+
+
+
+#####################################################################
+git clone https://github.com/ccasado16/backend-ts1.git
+
+
+conda activate backend_taller_software
+
+python manage.py migrate
+python manage.py migrate --run-syncdb
+python manage.py makemigrations
+python manage.py migrate
+python manage.py createsuperuser
+
+python manage.py runserver
+
+user: DdonLucho
+email: restauranteDdonLucho@gmail.com
+contra: lov3D_DonLucho@#!_3040#
+new_contra: luc2324!
+
+email: restauranteDdonLucho2@gmail.com
+contra: lov3D_DonLucho2@#!_3040#
+
+
+
+#####################################################################
+
+
+
+
+
+
+
+
+
+
